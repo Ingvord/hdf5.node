@@ -1479,6 +1479,10 @@ namespace NodeHDF5 {
             }
             std::unique_ptr<char* []> tbuffer(new char*[std::min(values_dim.get()[0], theSize)]);
             err=H5Dread(did, type_id, memspace_id, dataspace_id, H5P_DEFAULT, tbuffer.get());
+            if(*tbuffer.get() == nullptr) {
+              args.GetReturnValue().SetUndefined();
+              return;
+            }
             Local<Array> array = Array::New(v8::Isolate::GetCurrent(), std::min(values_dim.get()[0], theSize));
             for (unsigned int arrayIndex = 0; arrayIndex < std::min(values_dim.get()[0], theSize); arrayIndex++) {
               //std::string s(tbuffer.get()[arrayIndex]);
